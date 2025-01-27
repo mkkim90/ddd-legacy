@@ -3,8 +3,8 @@ package stringcalculator
 class StringCalculator {
     fun calculate(text: String?): Int {
         if (text.isNullOrBlank()) return 0
-        return text.parseDelimiter().sumOf {
-            toInt(it)
+        return text.parseDelimiter().sumOf { it ->
+            toInt(parsedText = it)
         }
     }
 
@@ -17,14 +17,14 @@ class StringCalculator {
         } ?: this.split(*DEFAULT_DELIMITERS.toCharArray())
     }
 
-    private fun toInt(it: String): Int {
-        val number = it.toIntOrNull() ?: throw RuntimeException("숫자가 아닌 문자열 $it")
-        if (number < 0) throw RuntimeException("음수 허용하지 않습니다 $it")
+    private fun toInt(parsedText: String): Int {
+        val number = parsedText.toIntOrNull() ?: throw RuntimeException("숫자가 아닌 문자열 $parsedText")
+        if (number < 0) throw RuntimeException("음수 허용하지 않습니다 $parsedText")
         return number
     }
 
     companion object {
         private const val CUSTOM_DELIMITER_PATTERN = "//(.)\n(.*)"
-        private const val DEFAULT_DELIMITERS = ";:"
+        private const val DEFAULT_DELIMITERS = ",:"
     }
 }
