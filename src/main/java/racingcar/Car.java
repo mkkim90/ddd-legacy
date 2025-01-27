@@ -12,13 +12,13 @@ public class Car {
         this.name = name;
     }
 
-    public int getPosition() {
-        return position;
-    }
-
     public void move(final MovingStrategy movingStrategy) {
         if (movingStrategy.movable()) { // 테스트하기 쉬운 부분
             position++;
         }
+    }
+
+    public int getPosition() {
+        return position;
     }
 }
