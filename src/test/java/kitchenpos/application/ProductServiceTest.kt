@@ -3,6 +3,9 @@ package kitchenpos.application
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
+import kitchenpos.domain.Menu
+import kitchenpos.domain.MenuProduct
 import kitchenpos.domain.MenuRepository
 import kitchenpos.domain.ProductRepository
 import kitchenpos.infra.PurgomalumClient
@@ -121,5 +124,40 @@ class ProductServiceTest {
                 productService.changePrice(productId, product)
             }
         }
+
+        @Test
+        fun `메뉴 가격이 상품의 합산 가격보다 클 경우, 해당 메뉴 상품을 비노출 처리`() {
+            // given
+            val productId = UUID.randomUUID()
+            val price = BigDecimal.valueOf(200)
+            val requestProduct = randomProduct(id = productId, price = price)
+            every { productRepository.findById(productId) } returns Optional.of(randomProduct(id = productId, price = BigDecimal.valueOf(100)))
+
+            val menu = mockk<Menu>(relaxed = true)
+            val menuProduct = mockk<MenuProduct>()
+            val menuProducts = listOf(menuProduct)
+            every { menuRepository.findAllByProductId(productId) } returns listOf(menu)
+
+            every { menuProduct.product } returns requestProduct
+            every { menuProduct.quantity } returns 1
+            every { menu.price } returns BigDecimal.valueOf(250) // Menu price greater than product total price
+            every { menu.menuProducts } returns menuProducts
+
+            // when
+            productService.changePrice(productId, requestProduct)
+
+            // then
+            verify { menu.setDisplayed(false) }
+        }
+    }
+
+    @Test
+    fun `상품 전체 조회`() {
+        // given
+        val products = listOf(randomProduct(), randomProduct(), randomProduct())
+        every { productRepository.findAll() } returns products
+
+        // when then
+        productService.findAll() shouldBe products
     }
 }
