@@ -9,8 +9,8 @@ import kotlin.random.Random
 
 fun randomMenu(
     id: UUID = UUID.randomUUID(),
-    name: String = randomMenuName(),
-    price: BigDecimal = randomPrice(),
+    name: String? = randomMenuName(),
+    price: BigDecimal? = randomPrice(),
     menuGroup: MenuGroup = randomMenuGroup(),
     isDisplayed: Boolean = Random.nextBoolean(),
     menuProducts: List<MenuProduct> = emptyList(),
@@ -27,7 +27,9 @@ fun randomMenu(
     }
 }
 
-fun randomMenuName(): String = listOf("후라이드치킨", "양념치킨", "순살양념", "감자튀김", "양념반후라이드반", "허니순살", "허니콤보").random()
+fun randomMenuId() = UUID.randomUUID()
+
+fun randomMenuName() = listOf("후라이드치킨", "양념치킨", "순살양념", "감자튀김", "양념반후라이드반", "허니순살", "허니콤보").random()
 
 fun randomMenuGroup(
     id: UUID = UUID.randomUUID(),
