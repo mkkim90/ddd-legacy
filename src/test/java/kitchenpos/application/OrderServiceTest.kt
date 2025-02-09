@@ -367,4 +367,11 @@ class OrderServiceTest {
             orderService.complete(order.id).status shouldBe OrderStatus.COMPLETED
         }
     }
+
+    @Test
+    fun `주문 조회`() {
+        val orders = listOf(randomOrder(), randomOrder())
+        every { orderRepository.findAll() } returns orders
+        orderService.findAll() shouldBe orders
+    }
 }
